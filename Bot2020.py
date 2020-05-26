@@ -6,7 +6,7 @@ from discord.ext.commands import Bot
 
 URL = 'https://news.google.com/topics/CAAqBwgKMIXDmAswuMmwAw?hl=ru&gl=RU&ceid=RU%3Aru'
 HEADERS={'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'accept': '*/*'} 
-TOKEN='NzAyMDkyODQyODE3OTQ1Njkw.Xp7BNQ.cObzDjzVJgQVfZsEiIchVBSgd4g'
+TOKEN= open('token.txt', 'r').readline()
 Bot = commands.Bot(command_prefix= '!')
 Bot.remove_command('help')
 
@@ -43,6 +43,7 @@ async def help(ctx):
     await ctx.send("Список команд:")
     await ctx.send("!play - пингует пользователей которые смогут пойти с вами играть в выбранные игры. Игры выбираются подкомандами (сокращенное название игр r6 или R6 означает Rainbow Six: Siege, и т.д.)")
     await ctx.send("!info - последние новости, обновляются при вызове команды")
+    await ctx.send("!bot - исходный код бота")
 
 
 @Bot.command(pass_context=True)  
@@ -75,5 +76,9 @@ async def info(ctx):
         mes=get_content(html.text)
         await ctx.send(mes)
     
+
+@Bot.command(pass_context=True)
+async def bot(ctx):
+      await ctx.send("Исходный код бота <<https://github.com/ilyaRozhkov/DiscordBot>>")
 
 Bot.run(TOKEN)
