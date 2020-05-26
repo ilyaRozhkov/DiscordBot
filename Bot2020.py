@@ -157,7 +157,21 @@ async def play(ctx, url : str):
 
 @client.command(pass_context=True)
 async def stop(ctx):
+       voice.pause()
+
+@client.command(pass_context=True)
+async def again(ctx):
+       voice.resume()
+
+@client.command(pass_context=True)
+async def drop(ctx):
+       voice.stop()
        os.remove('song.mp3')
 
+@client.command(pass_context=True)
+async def test(ctx):
+    requests.post(url, headers={'UA': 'Chrome'}, data={"foo": 'bar'})
+    res = requests.get(url)
+    print(res.text)
 
 client.run(TOKEN)
