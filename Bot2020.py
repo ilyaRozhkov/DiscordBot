@@ -7,7 +7,9 @@ from discord.ext.commands import CommandNotFound
 from discord.utils import get
 import youtube_dl
 import os
+import webbrowser
 
+webbrowser.register('Chrome', None, webbrowser.BackgroundBrowser('C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'))
 URL = 'https://news.google.com/topics/CAAqBwgKMIXDmAswuMmwAw?hl=ru&gl=RU&ceid=RU%3Aru'
 HEADERS={'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'accept': '*/*'} 
 TOKEN= ''
@@ -31,17 +33,12 @@ def get_content(html):
     return last_news
     
         
-    
-
-def parse():
-    html = get_html(URL)
-    if html.status_code==200:
-        get_content(html.text)
+  
 
 @client.event
 async def on_ready():
     print("bot is online")
-    await client.change_presence( status = discord.Status.online, activity = discord.Game('finger in the ass'))
+    await client.change_presence( status = discord.Status.online, activity = discord.Game('Crysis'))
 
 @client.command(pass_context=True)  
 async def help(ctx):
@@ -173,15 +170,28 @@ async def stop(ctx):
 @client.command(pass_comtext=True)
 async def music(ctx):
     emb=discord.Embed(title = 'Music', colour = discord.Color.dark_gold())
-    emb.add_field(name = '!play + url', value='запуска трека')
+    emb.add_field(name = '!play + url', value='запуск трека')
     emb.add_field(name = '!pause', value='поставить трек на паузу')
     emb.add_field(name = '!resume', value='запустить трек вновь')
     emb.add_field(name = '!stop', value='остановить трек и очистить поток')
     await ctx.send(embed=emb)
 
-@client.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandNotFound):
-        await ctx.send('Прости сладкий,я не знаю такой команды')
+def get_url_music(html):
+    soup = BeautifulSoup(html, 'html.parser')
+    item = soup.find_all('div', class_='path path_show-https organic__path')
+    print(item)
+    
+
+@client.command(pass_context=True)
+async def tab(ctx, arg):
+    await ctx.send(arg)
+    rs=requests.get('https://yandex.ru/search/?clid=2367648-307&text=youtube'+arg)
+    if rs.status_code==200:
+        print(rs.url)
+        some=get_url_music(rs.text)
+        
+    
+    
+
 
 client.run(TOKEN)
