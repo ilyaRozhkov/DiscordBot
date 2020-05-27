@@ -3,13 +3,14 @@ from bs4 import BeautifulSoup
 import discord
 from discord.ext import commands
 from discord.ext.commands import Bot
+from discord.ext.commands import CommandNotFound
 from discord.utils import get
 import youtube_dl
 import os
 
 URL = 'https://news.google.com/topics/CAAqBwgKMIXDmAswuMmwAw?hl=ru&gl=RU&ceid=RU%3Aru'
 HEADERS={'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'accept': '*/*'} 
-TOKEN= ''
+TOKEN= 'NzAyMDkyODQyODE3OTQ1Njkw.Xs1AbA.Q4hQUbTY_OzF_XaMtBMJj1P91Os'
 client = commands.Bot(command_prefix= '!')
 client.remove_command('help')
 
@@ -49,6 +50,7 @@ async def help(ctx):
     emb.add_field( name = '{}game'.format('!'), value='Пингует пользователей которые смогут пойти с вами играть в выбранные игры. Игры выбираются подкомандами (сокращенное название игр r6 или R6 означает Rainbow Six: Siege, и т.д.')
     emb.add_field( name = '{}info'.format('!'), value='Последние новости, обновляются при вызове команды')
     emb.add_field( name = '{}bot'.format('!'), value='Исходный код бота')
+    emb.add_field( name = '{}music'.format('!'), value='Информация для работы с музыкой')
     await ctx.send( embed = emb )
    
 
@@ -153,25 +155,33 @@ async def play(ctx, url : str):
     voice.source.volume = 0.07
 
     name_song = name.rsplit('-', 2)
-    await ctx.send(f'Флексите сладкие: {name_song[0]}')
+    await ctx.send(f'Играет трек: {name_song[0]}')
 
 @client.command(pass_context=True)
-async def stop(ctx):
+async def pause(ctx):
        voice.pause()
 
 @client.command(pass_context=True)
-async def again(ctx):
+async def resume(ctx):
        voice.resume()
 
 @client.command(pass_context=True)
-async def drop(ctx):
+async def stop(ctx):
        voice.stop()
        os.remove('song.mp3')
 
-@client.command(pass_context=True)
-async def test(ctx):
-    requests.post(url, headers={'UA': 'Chrome'}, data={"foo": 'bar'})
-    res = requests.get(url)
-    print(res.text)
+@client.command(pass_comtext=True)
+async def music(ctx):
+    emb=discord.Embed(title = 'Music', colour = discord.Color.dark_gold())
+    emb.add_field(name = '!play + url', value='запуска трека')
+    emb.add_field(name = '!pause', value='поставить трек на паузу')
+    emb.add_field(name = '!resume', value='запустить трек вновь')
+    emb.add_field(name = '!stop', value='остановить трек и очистить поток')
+    await ctx.send(embed=emb)
+
+@client.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send('Прости сладкий,я не знаю такой команды')
 
 client.run(TOKEN)
