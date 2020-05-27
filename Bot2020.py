@@ -115,9 +115,11 @@ async def leave(ctx):
     await ctx.send(f' Я вышел : {channel}')
 
 @client.command(pass_context=True)
-async def play(ctx, url : str):
+async def play(ctx, arg):
     song_there = os.path.isfile('song.mp3')
-
+    rs=requests.get('https://yandex.ru/search/?clid=2367648-307&text=youtubemusic'+arg)
+    if rs.status_code==200:
+                url=get_url_music(rs.text)
     try:
         if song_there:
             os.remove('song.mp3')
@@ -178,17 +180,25 @@ async def music(ctx):
 
 def get_url_music(html):
     soup = BeautifulSoup(html, 'html.parser')
-    item = soup.find_all('div', class_='path path_show-https organic__path')
-    print(item)
+    x=0
+    for item in soup.find_all('a', class_='link link_theme_outer path__item i-bem'):
+        x+=1
+        
+        link = item['href']
+        if x==2:
+            any=link
+    
+    print(any)
+    return any
+    
     
 
 @client.command(pass_context=True)
 async def tab(ctx, arg):
-    await ctx.send(arg)
-    rs=requests.get('https://yandex.ru/search/?clid=2367648-307&text=youtube'+arg)
+   
+    rs=requests.get('https://yandex.ru/search/?clid=2367648-307&text=youtubemusic'+arg)
     if rs.status_code==200:
-        print(rs.url)
-        some=get_url_music(rs.text)
+                some=get_url_music(rs.text)
         
     
     
