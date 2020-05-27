@@ -10,7 +10,7 @@ import os
 
 URL = 'https://news.google.com/topics/CAAqBwgKMIXDmAswuMmwAw?hl=ru&gl=RU&ceid=RU%3Aru'
 HEADERS={'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'accept': '*/*'} 
-TOKEN= 'NzAyMDkyODQyODE3OTQ1Njkw.Xs1AbA.Q4hQUbTY_OzF_XaMtBMJj1P91Os'
+TOKEN= ''
 client = commands.Bot(command_prefix= '!')
 client.remove_command('help')
 
