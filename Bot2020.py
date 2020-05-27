@@ -181,11 +181,6 @@ async def music(ctx):
     emb.add_field(name = '!stop', value='остановить трек и очистить поток')
     await ctx.send(embed=emb)
 
-@client.command(pass_context=True)
-async def some(ctx):
-    etr=discord.Embed(title = 'Music', colour = discord.Color.dark_gold())
-    etr.add_field(name = '!play + str', value='запуск трека, название трека одним словом')
-    await ctx.send(embed=etr)
 
 def get_url_music(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -208,3 +203,4 @@ async def on_command_error(ctx, error):
 
 
 client.run(TOKEN)
+
