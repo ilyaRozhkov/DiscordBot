@@ -37,11 +37,13 @@ def get_content(html):
 
 @client.event
 async def on_ready():
-    print("bot is online")
+    print("System, activated")
     await client.change_presence( status = discord.Status.online, activity = discord.Game('Crysis'))
 
 @client.command(pass_context=True)  
 async def help(ctx):
+    
+    print('!help comand')
     emb = discord.Embed( title = 'Навигация по командам')
 
     emb.add_field( name = '{}game'.format('!'), value='Пингует пользователей которые смогут пойти с вами играть в выбранные игры. Игры выбираются подкомандами (сокращенное название игр r6 или R6 означает Rainbow Six: Siege, и т.д.')
@@ -55,7 +57,7 @@ async def help(ctx):
 @client.command(pass_context=True)  
 async def hello(ctx):
    
-    await ctx.send(f"Здорово пидоры <@here>")
+    await ctx.send(f"System activated <@here>")
     
 
 @client.command(pass_context=True)  
@@ -78,6 +80,7 @@ async def game(ctx, arg=None):
 
 @client.command(pass_context=True)
 async def info(ctx):
+    print('!info comand')
     html = requests.get(URL)
     if html.status_code==200:
         print(html)
@@ -101,7 +104,7 @@ async def join(ctx):
         await voice.move_to(channel)
     else:
         voice=await channel.connect()
-        await ctx.send(f' Я тута : {channel}')
+        
 
 @client.command(pass_context=True)
 async def leave(ctx):
@@ -112,7 +115,7 @@ async def leave(ctx):
         await voice.disconnect()
     else:
         voice=await channel.connect()
-    await ctx.send(f' Я вышел : {channel}')
+
 
 @client.command(pass_context=True)
 async def play(ctx, arg):
@@ -167,16 +170,22 @@ async def resume(ctx):
 @client.command(pass_context=True)
 async def stop(ctx):
        voice.stop()
-       os.remove('song.mp3')
+       
 
 @client.command(pass_comtext=True)
 async def music(ctx):
     emb=discord.Embed(title = 'Music', colour = discord.Color.dark_gold())
-    emb.add_field(name = '!play + url', value='запуск трека')
+    emb.add_field(name = '!play + str', value='запуск трека, название трека одним словом')
     emb.add_field(name = '!pause', value='поставить трек на паузу')
     emb.add_field(name = '!resume', value='запустить трек вновь')
     emb.add_field(name = '!stop', value='остановить трек и очистить поток')
     await ctx.send(embed=emb)
+
+@client.command(pass_context=True)
+async def some(ctx):
+    etr=discord.Embed(title = 'Music', colour = discord.Color.dark_gold())
+    etr.add_field(name = '!play + str', value='запуск трека, название трека одним словом')
+    await ctx.send(embed=etr)
 
 def get_url_music(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -191,16 +200,10 @@ def get_url_music(html):
     print(any)
     return any
     
-    
-
-@client.command(pass_context=True)
-async def tab(ctx, arg):
-   
-    rs=requests.get('https://yandex.ru/search/?clid=2367648-307&text=youtubemusic'+arg)
-    if rs.status_code==200:
-                some=get_url_music(rs.text)
-        
-    
+@client.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send('Мне не доступна эта функция нанокостюма')
     
 
 
